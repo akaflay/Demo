@@ -1,0 +1,36 @@
+{
+  "name": "demo",
+  "description": "Demo Project to get log after loging in to RC",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "angadkafley@gmail.com",
+  "dependencies": {
+    "dotenv": "latest",
+    "express": "^4.13.4",
+    "mustache-express": "latest",
+    "request": "^2.83.0",
+    "ringcentral": "^2.0.4"
+  },
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akaflay/Demo.git"
+  },
+  "keywords": [
+    "Ring",
+    "central",
+    "login",
+    "with",
+    "getting",
+    "call",
+    "logs"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akaflay/Demo/issues"
+  },
+  "homepage": "https://github.com/akaflay/Demo#readme"
+}
