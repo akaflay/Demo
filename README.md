@@ -17,7 +17,7 @@ $ npm install
 
 ## Configuration
 
-Edit the `.env` file to add your application key and application secret.
+Edit the `.env` file to add your application key and application secret.Currently it has my config values
 
 ```bash
 $ cd demo
