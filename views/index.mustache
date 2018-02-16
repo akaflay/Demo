@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo Project to get Call Logs</title>
+        <meta charset="UTF-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script>
+
+
+var config = {
+    authUri: '{{{ authorize_uri }}}',
+    redirectUri: '{{{ redirect_uri }}}',
+    callLogUri:'{{{ callLog_uri}}}'
+}
+
+var OAuthCode = function(config) {
+    this.config = config;
+    this.loginPopup  = function() {
+        this.loginPopupUri(this.config['authUri'], this.config['redirectUri']);
+    }
+    this.loginPopupUri  = function(authUri, redirectUri) {
+        var win         = window.open(authUri, 'windowname1', 'width=800, height=600'); 
+
+        var pollOAuth   = window.setInterval(function() { 
+            try {
+                console.log(win.document.URL);
+                if (win.document.URL.indexOf(redirectUri) != -1) {
+                    window.clearInterval(pollOAuth);
+                    win.close();
+                    location.reload();
+                }
+            } catch(e) {
+                console.log(e)
+            }
+        }, 100);
+    }
+}
+var callHistory=function(){
+    this.loadCallHistory=function(){
+        window.location.href = '/callhistory'
+    }
+}
+
+var oauth = new OAuthCode(config);
+var callLogs = new callHistory();
+
+
+        </script>
+    </head>
+    <body>
+        <h1>Demo Project to get Call Logs</h1>
+        
+        {{^token_json}}
+        <p><input type="button"  class="btn btn-default"  onclick="oauth.loginPopup()" value="Login with RingCentral"></p>
+        {{/token_json}}
+
+        {{#token_json}}
+         <p><input type="button" class="btn btn-success" onclick="callLogs.loadCallHistory()" value="Load Call History"></p>  
+         {{#callLogSize}}
+         <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Start time</th>
+              <th scope="col">Duration</th>
+               <th scope="col">Type</th>
+              <th scope="col">Direction</th>
+              <th scope="col">Action</th>
+              <th scope="col">Result</th>
+              <th scope="col">To</th>
+              <th scope="col">From</th>
+            </tr>
+        </thead>  
+        {{/callLogSize}}     
+         {{#data}}
+           <tr>
+            <td>{{id}}</td>
+            <td>{{startTime}}</td>
+            <td>{{duration}}</td>
+            <td>{{type}}</td>
+            <td>{{direction}}</td>
+            <td>{{action}}</td>
+            <td>{{result}}</td>
+            <td>{{to.phoneNumber}}</td>
+            <td>{{from.name}}</td>
+          </tr>          
+        {{/data}}
+        {{#callLogSize}}
+          </table>  
+        {{/callLogSize}}
+        {{#error}}
+        <p>There was an error loading call log</p> 
+        {{/error}}
+        {{/token_json}}  
+        
+    </body>
+</html>
