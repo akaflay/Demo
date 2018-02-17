@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Demo Project to get Call Logs</title>
+        <title>Demo Call Logs Project</title>
         <meta charset="UTF-8">
+        <style>
+        .header{
+          height: 39px;
+          background-color: #0275d8!important;    
+          padding: 5px;
+          margin-bottom: 10px;
+          color: #fff;
+        }
+        .margin-top-20{
+          margin-top: 20px;
+          color:#000;
+        }
+        </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script>
+        <link rel="stylesheet" href="./style/style.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script>  
 
 
 var config = {
@@ -15,7 +29,7 @@ var config = {
     callLogUri:'{{{ callLog_uri}}}'
 }
 
-var OAuthCode = function(config) {
+var OAuthCode = function(config){
     this.config = config;
     this.loginPopup  = function() {
         this.loginPopupUri(this.config['authUri'], this.config['redirectUri']);
@@ -38,9 +52,24 @@ var OAuthCode = function(config) {
     }
 }
 var callHistory=function(){
-    this.loadCallHistory=function(){
-        window.location.href = '/callhistory'
+    this.loadCallHistory=function(dateFrom,dateTo){
+      if(!dateFrom){
+        dateFrom=getLastYearDate();
+      }
+      if(!dateTo){
+        dateTo=getNextYearDate();
+      }
+      window.location.href = `/callhistory/dateFrom/${dateFrom}/dateTo/${dateTo}`;
     }
+}
+
+var getLastYearDate=()=>{
+  var date = new Date(Date.now());
+  return `${date.getFullYear()-1}-${(date.getMonth()<9?('0'+date.getMonth()):date.getMonth())}-${(date.getDate()<9?('0'+date.getMonth()):date.getDate())}`;
+}
+var getNextYearDate=()=>{
+  var date = new Date(Date.now());
+  return `${date.getFullYear()+1}-${(date.getMonth()<9?('0'+date.getMonth()):date.getMonth())}-${(date.getDate()<9?('0'+date.getMonth()):date.getDate())}`;
 }
 
 var oauth = new OAuthCode(config);
@@ -50,14 +79,24 @@ var callLogs = new callHistory();
         </script>
     </head>
     <body>
-        <h1>Demo Project to get Call Logs</h1>
-        
+      <div class='header'>Demo Call Logs Project<div>
+       <div class="container-fluid margin-top-20">
         {{^token_json}}
-        <p><input type="button"  class="btn btn-default"  onclick="oauth.loginPopup()" value="Login with RingCentral"></p>
+        <input type="button"  class="btn btn-primary"  onclick="oauth.loginPopup()" value="Login">
         {{/token_json}}
 
         {{#token_json}}
-         <p><input type="button" class="btn btn-success" onclick="callLogs.loadCallHistory()" value="Load Call History"></p>  
+         <form>
+              <div class="form-group">
+                <label for="formGroupExampleInput">Date From</label>
+                <input type="text" placeholder="2016-03-10" id="dateFrom" class="form-control form-control-sm col-sm-2"/>
+              </div>
+              <div class="form-group">
+                <label for="formGroupExampleInput">Date From</label>
+                <input type="text" placeholder="2016-03-10" id="dateTo" class="form-control form-control-sm col-sm-2"/>
+              </div>
+             <p><input type="button" class="btn btn-success" onclick="callLogs.loadCallHistory(document.getElementById('dateFrom').value,document.getElementById('dateTo').value)" value="Load Call History"></p> 
+         </form> 
          {{#callLogSize}}
          <table class="table">
             <thead>
@@ -90,10 +129,19 @@ var callLogs = new callHistory();
         {{#callLogSize}}
           </table>  
         {{/callLogSize}}
+        {{^callLogSize}}
+        {{#dataRequested}}
+        <div class="alert alert-danger" role="alert">
+          No Data found !!!
+        </div>
+        {{/dataRequested}}
+        {{/callLogSize}}
         {{#error}}
-        <p>There was an error loading call log</p> 
+          <div class="alert alert-danger" role="alert">
+          There was an error loading call log
+          </div>
         {{/error}}
         {{/token_json}}  
-        
+        </div>
     </body>
 </html>

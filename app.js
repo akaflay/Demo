@@ -62,15 +62,18 @@ app.get('/callback.html', function (req, res) {
   }
 });
 
-app.get('/callhistory', function (req, res) {
+app.get('/callhistory/dateFrom/:dateFrom/dateTo/:dateTo', function (req, res) {
   var that = this;
   var thatRes = res;
   var token = rcsdk.platform().auth().data();
   var platform = rcsdk.platform();
   var callLogData;
+  var dateFrom= req.params.dateFrom;
+  var dateTo= req.params.dateTo;
   if (getToken() != '') {
+    var url=getQueryUrl(process.env.CALL_LOG_URL,dateFrom,dateTo);
     platform.
-    get(process.env.CALL_LOG_URL).
+    get(url).
     then(function (res) {
       that.callLogData = res.json().records;
       token_json = getToken();
@@ -83,7 +86,8 @@ app.get('/callhistory', function (req, res) {
         token_json: token_json,
         callLog_uri: process.env.CALL_LOG_URL,
         data: that.callLogData,
-        callLogSize: that.callLogData.length
+        callLogSize: that.callLogData.length,
+        dataRequested:true
       });
     }).catch(function (e) {
       conole.log('Error: in getting call logs\n\n' + e.message);
@@ -103,7 +107,11 @@ app.get('/callhistory', function (req, res) {
   }
 });
 
-function homePageLoader(res) {
+var getQueryUrl=(baseUrl,dateFrom,dateTo)=>{
+return `${baseUrl}?dateFrom=${dateFrom}&dateTo=${dateTo}`;
+};
+
+var homePageLoader=(res)=>{
   token_json = getToken();
   res.render('index', {
     authorize_uri: rcsdk.platform().authUrl({
@@ -112,10 +120,11 @@ function homePageLoader(res) {
     }),
     redirect_uri: process.env.RC_APP_REDIRECT_URL,
     token_json: token_json,
-    callLog_uri: process.env.CALL_LOG_URL
+    callLog_uri: process.env.CALL_LOG_URL,
+    dataRequested:false
   });
 }
-function getToken() {
+var getToken=()=>{
   var token = rcsdk.platform().auth().data();
   return token['access_token'] ? JSON.stringify(token, null, ' ') : '';
 }
