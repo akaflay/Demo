@@ -3,7 +3,14 @@ Demo Project to get Call Logs
 
 ## Overview
 
-This is a demo project in which we do a 3 Leg authentication and then we load the call logs for the logged in user.
+This is a demo project in which we do a 3 Leg authentication and then we can load the call logs as well as make ring out for the logged in user.
+
+
+## Technologies Used
+
+```
+We are using a simple HTML page as the UI with technologies such as Font Awesome, Twitter Bootstrap, JavaScript, JQuery , Mustache for template and Ring Central Javascript SDK.Have also used Regular expression to validate phone number and date format.We are using nodejs as the back end.
+```
 
 ## Installation
 

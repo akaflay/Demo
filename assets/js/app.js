@@ -7,7 +7,6 @@ var app = function () {
     var win = window.open(authUri, 'Login Window', 'width=800, height=800');
     var pollOAuth = window.setInterval(function () {
         try {
-          console.log(win.document.URL);
           if (win.document.URL.indexOf(redirectUri) != -1) {
             window.clearInterval(pollOAuth);
             win.close();
@@ -17,7 +16,7 @@ var app = function () {
               url: redirectUri,
               contentType: 'application/json',
               success: function (data, textStatus, jQxhr) {
-                that.loggedInPageDisplay();
+                that.validateLogin();
               },
               error: function (jqXhr, textStatus, errorThrown) {
                 that.displayErrorMessage(`Error in loging in with status ${textStatus}`);
@@ -32,7 +31,7 @@ var app = function () {
       }, 100);
   }
   this.loadCallHistory = function () {
-   that.loadSpinner();
+    that.loadSpinner();
     var from = $("#dateFrom").val();
     var to = $("#dateTo").val();
     if (!from) {
@@ -41,11 +40,11 @@ var app = function () {
     if (!to) {
       to = this.getNextYearDate();
     }
-    if(!that.validateDate(from)){
+    if (!that.validateDate(from)) {
       that.displayErrorMessage("Please enter proper From date eg 2018-10-10");
       return;
     }
-    if(!that.validateDate(to)){
+    if (!that.validateDate(to)) {
       that.displayErrorMessage("Please enter proper To date eg 2018-10-10");
       return;
     }
@@ -60,7 +59,7 @@ var app = function () {
       data: JSON.stringify(postData),
       contentType: 'application/json',
       success: function (data, textStatus, jQxhr) {
-        if (data.data.length > 0) {
+        if (data.login && data.data.length > 0) {
           var output = Mustache.render("<table class=\"table\" id=\"call-log-table\">" +
               "<thead>" +
               "<tr>" +
@@ -90,8 +89,10 @@ var app = function () {
               "{{/data}}" +
               "</table>", data);
           $('#main-content').html(output);
-        } else {
+        } else if (data.login) {
           that.displayErrorMessage(`No data found !!!`);
+        } else {
+          that.loginPageDisplay();
         }
       },
       error: function (jqXhr, textStatus, errorThrown) {
@@ -102,13 +103,13 @@ var app = function () {
 
   this.makeRingOut = function () {
     that.loadSpinner();
-    var fromPhone=$("#callFrom").val();
-    var toPhone=$("#callTo").val();
-    if(!that.validatePhone(fromPhone)){
-     that.displayErrorMessage("Please enter proper Call From phone number eg 6502283406");
-     return;
+    var fromPhone = $("#callFrom").val();
+    var toPhone = $("#callTo").val();
+    if (!that.validatePhone(fromPhone)) {
+      that.displayErrorMessage("Please enter proper Call From phone number eg 6502283406");
+      return;
     }
-    if(!that.validatePhone(toPhone)){
+    if (!that.validatePhone(toPhone)) {
       that.displayErrorMessage("Please enter proper Call To phone number eg 6502283406");
       return;
     }
@@ -124,14 +125,18 @@ var app = function () {
       contentType: 'application/json'
     })
     .done(function (data) {
-      var output = Mustache.render("<div class=\"alert alert-success\" role=\"alert\" id=\"status-bar\">" +
-          "<ul>" +
-          "<li>Call Status => {{callStatus}} </li>" +
-          "<li>Caller Status => {{callerStatus}}</li>" +
-          "<li>Callee Status => {{calleeStatus}}</li>" +
-          "</ul>" +
-          "</div>", data);
-      $('#main-content').html(output);
+      if (data.login && data.data) {
+        var output = Mustache.render("<div class=\"alert alert-success\" role=\"alert\" id=\"status-bar\">" +
+            "<ul>" +
+            "<li>Call Status => {{callStatus}} </li>" +
+            "<li>Caller Status => {{callerStatus}}</li>" +
+            "<li>Callee Status => {{calleeStatus}}</li>" +
+            "</ul>" +
+            "</div>", data.data);
+        $('#main-content').html(output);
+      } else {
+        that.loginPageDisplay();
+      }
     }).fail(function (jqXHR, textStatus) {
       that.displayErrorMessage(`Ring out failed with status ${textStatus}`);
     });
@@ -168,6 +173,7 @@ var app = function () {
   }
 
   this.loginPageDisplay = function () {
+    $("#loginButton").show();
     $("#callLog").hide();
     $("#ringOut").hide();
   }
@@ -197,16 +203,16 @@ var app = function () {
     $('#main-content').html(output);
   }
 
-  this.loadSpinner=function(){
-     $('#main-content').html("<i class=\"fa fa-spinner fa-spin fa-3x\">&nbsp</i>");
-  }
-  
-  this.validatePhone=function(phoneNumber){    
-     return phoneNumber.match(/^\d{10}$/);
+  this.loadSpinner = function () {
+    $('#main-content').html("<i class=\"fa fa-spinner fa-spin fa-3x\">&nbsp</i>");
   }
 
-  this.validateDate=function(date){    
+  this.validatePhone = function (phoneNumber) {
+    return phoneNumber.match(/^\d{10}$/);
+  }
+
+  this.validateDate = function (date) {
     return date.match(/^\d{4}-\d{2}-\d{2}$/);
   }
-  
+
 }

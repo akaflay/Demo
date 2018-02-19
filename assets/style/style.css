@@ -1,15 +1,14 @@
 .header{
-          height: 39px;
-          background-color: #0275d8!important;    
-          padding: 5px;
-          margin-bottom: 10px;
-          color: #fff;
-        }
-        .margin-top-20{
-          margin-top: 20px;
-          color:#000;
-        }
-
-        #callLog,#ringOut{
-          margin-top: 10px;
-        }
+     height: 39px;
+     background-color: #0275d8;
+     padding: 5px;
+     margin-bottom: 10px;
+     color: #fff;
+}
+ .margin-top-20{
+     margin-top: 20px;
+     color:#000;
+}
+ #callLog,#ringOut{
+     margin-top: 10px;
+}
