@@ -2,10 +2,11 @@
   "name": "demo",
   "description": "Demo Project to get log after loging in to RC",
   "scripts": {
-    "start": "node app"
+    "start": "node index.js"
   },
   "author": "angadkafley@gmail.com",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "dotenv": "latest",
     "express": "^4.13.4",
     "mustache-express": "latest",
@@ -13,7 +14,6 @@
     "ringcentral": "^2.0.4"
   },
   "version": "1.0.0",
-  "main": "app.js",
   "devDependencies": {},
   "repository": {
     "type": "git",
@@ -32,5 +32,6 @@
   "bugs": {
     "url": "https://github.com/akaflay/Demo/issues"
   },
-  "homepage": "https://github.com/akaflay/Demo#readme"
+  "homepage": "https://github.com/akaflay/Demo#readme",
+  "main":"index.js"
 }
