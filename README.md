@@ -3,14 +3,8 @@ Demo Project to get Call Logs
 
 ## Overview
 
-This is a demo project in which we do a 3 Leg authentication and then we can load the call logs as well as make ring out for the logged in user.
+This is a demo project in which we do a 3 Leg authentication and then we can load the call logs as well as make ring out for the logged in user.Using a simple HTML page as the UI with technologies such as Font Awesome, Twitter Bootstrap, JavaScript, JQuery , Mustache for template and Ring Central Javascript SDK.Have also used Regular expression to validate phone number and date format.We are using Nodejs as the back end.
 
-
-## Technologies Used
-
-```
-We are using a simple HTML page as the UI with technologies such as Font Awesome, Twitter Bootstrap, JavaScript, JQuery , Mustache for template and Ring Central Javascript SDK.Have also used Regular expression to validate phone number and date format.We are using nodejs as the back end.
-```
 
 ## Installation
 
@@ -55,10 +49,10 @@ Open the web page:
 $ npm start
 ```
 
-Go to the URL:
+Go to the browser and paste the below URL:
 
 ```
 http://localhost:8000
 ````
 
-Then click the button Login with Ring Central. It will open a popup in whch you need to allow access to call logs.Now the index page will have a Load call History button.Click on this to load the call history.  
+Then click the Login button to login with Ring Central. It will open a popup in whch you need to allow access to call logs and ring out.After the login is successfull the index page will have two buttons Load call History and Load Ring out option.Once you click either of these buttons you will see a form loaded.You can provide the input and click the Load Call log/Ring out button at the end of the form to check the results. 
