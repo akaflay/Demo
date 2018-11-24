@@ -1,5 +1,5 @@
-Demo Project to get Call Logs
-==========================================================
+Sample Project to get Call Logs, Send SMS and Make Calls using Ring Central APIs
+================================================================================
 
 ## Overview
 
