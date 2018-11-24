@@ -56,3 +56,6 @@ http://localhost:8000
 ````
 
 Then click the Login button to login with Ring Central. It will open a popup in whch you need to allow access to call logs and ring out.After the login is successfull the index page will have two buttons Load call History and Load Ring out option.Once you click either of these buttons you will see a form loaded.You can provide the input and click the Load Call log/Ring out button at the end of the form to check the results. 
+
+## Questions and Concerns
+https://better-coder.slack.com/
