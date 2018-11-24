@@ -10,7 +10,7 @@
     "dotenv": "latest",
     "express": "^4.13.4",
     "mustache-express": "latest",
-    "request": "^2.83.0",
+    "request": "^2.88.0",
     "ringcentral": "^2.0.4"
   },
   "version": "1.0.0",
@@ -33,5 +33,5 @@
     "url": "https://github.com/akaflay/Demo/issues"
   },
   "homepage": "https://github.com/akaflay/Demo#readme",
-  "main":"index.js"
+  "main": "index.js"
 }
